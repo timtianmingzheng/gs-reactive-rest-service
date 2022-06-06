@@ -1,12 +1,14 @@
 package hello;
 
 
+import io.netty.handler.logging.LogLevel;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
+import reactor.netty.transport.logging.AdvancedByteBufFormat;
 
 @Component
 public class GreetingClient {
@@ -19,7 +21,8 @@ public class GreetingClient {
         this.client = builder
                 .baseUrl("http://localhost:8080")
                 .clientConnector(new ReactorClientHttpConnector(
-                        HttpClient.create().wiretap(true)
+                        HttpClient.create()
+                                .wiretap(this.getClass().getCanonicalName(), LogLevel.INFO, AdvancedByteBufFormat.TEXTUAL)
                 ))
                 .build();
     }
